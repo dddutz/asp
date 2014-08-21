@@ -1,38 +1,23 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(optimization)
+find_package(catkin_simple REQUIRED)
+catkin_simple()
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+find_package(OpenMP)
+add_definitions("-fopenmp")
 
-rosbuild_init()
+cs_add_library(${PROJECT_NAME} src/${PROJECT_NAME}.cpp src/nips.cpp src/grid_search.cpp)
+target_link_libraries(${PROJECT_NAME} gomp)
+cs_add_library(common_functions src/common_functions.cpp)
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+# TODO:
+#cs_add_compile_flags(${PROJECT_NAME} -fopenmp)
+#cs_add_link_flags(${PROJECT_NAME} -fopenmp)
 
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
-
-#common commands for building c++ executables and libraries
-rosbuild_add_library(${PROJECT_NAME} src/${PROJECT_NAME}.cpp src/nips.cpp src/grid_search.cpp)
-rosbuild_add_library(common_functions src/common_functions.cpp)
-rosbuild_add_compile_flags(${PROJECT_NAME} -fopenmp)
-rosbuild_add_link_flags(${PROJECT_NAME} -fopenmp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-
-rosbuild_add_executable(demo_nesterov src/demo_nesterov.cpp)
+cs_add_executable(demo_nesterov src/demo_nesterov.cpp)
 target_link_libraries(demo_nesterov ${PROJECT_NAME} common_functions)
 
-rosbuild_add_gtest(test_optimization src/test_optimization.cpp)
-rosbuild_add_gtest_build_flags(test_optimization)
+catkin_add_gtest(test_optimization src/test_optimization.cpp)
 target_link_libraries(test_optimization ${PROJECT_NAME} common_functions)
+
+cs_export()

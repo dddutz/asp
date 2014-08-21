@@ -10,6 +10,14 @@ using namespace pl;
 using namespace pl::example;
 using namespace std;
 
+// TEST(Assertions, Assertions)
+// {
+//   assert(false);
+//   cout << "System assertions are not on." << endl;
+//   PL_ASSERT(false);
+//   cout << "PL assertions are not on." << endl;
+// }
+
 TEST(Pipeline, RemovePodNames)
 {
   registerPods();

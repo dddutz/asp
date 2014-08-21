@@ -1,32 +1,17 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(agent)
+find_package(catkin_simple REQUIRED)
+catkin_simple()
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+find_package(Boost REQUIRED COMPONENTS thread system program_options)
+include_directories(${Boost_INCLUDE_DIRS})
 
-rosbuild_init()
+cs_add_library(agent src/lib/lockable.cpp
+                     src/lib/agent.cpp)
+target_link_libraries(agent ${Boost_LIBRARIES})
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+catkin_add_gtest(test_lockable src/test/test_lockable.cpp)
+target_link_libraries(test_lockable agent)
 
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
-
-rosbuild_add_library(${PROJECT_NAME}
-  src/lib/lockable.cpp
-  )
-rosbuild_add_boost_directories()
-rosbuild_link_boost(${PROJECT_NAME} thread)
-
-rosbuild_add_gtest(test_lockable src/test/test_lockable.cpp)
-rosbuild_add_gtest_build_flags(test_lockable)
-target_link_libraries(test_lockable ${PROJECT_NAME})
+cs_export(INCLUDE_DIRS ${Boost_INCLUDE_DIRS}
+          LIBRARIES ${Boost_LIBRARIES})

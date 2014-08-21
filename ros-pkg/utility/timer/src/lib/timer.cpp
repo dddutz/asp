@@ -1,3 +1,4 @@
+#include <ros/ros.h>
 #include <timer/timer.h>
 
 #define HRTCLOCK CLOCK_MONOTONIC_RAW
@@ -5,7 +6,8 @@
 HighResTimer::HighResTimer(const std::string& description) :
   description_(description),
   total_us_(0),
-  stopped_(true)
+  stopped_(true),
+  call_count_(0)
 {
 }
 
@@ -13,6 +15,7 @@ void HighResTimer::start()
 {
   clock_gettime(HRTCLOCK, &start_);
   stopped_ = false;
+  call_count_++;
 }
 
 void HighResTimer::stop()
@@ -44,26 +47,6 @@ double HighResTimer::getMicroseconds() const
     clock_gettime(HRTCLOCK, &curr);
     return total_us_ + 1e6 * (curr.tv_sec - start_.tv_sec) + 1e-3 * (curr.tv_nsec - start_.tv_nsec);
   }
-}
-
-double HighResTimer::getMilliseconds() const
-{
-  return getMicroseconds() / 1000.;
-}
-
-double HighResTimer::getSeconds() const
-{
-  return getMilliseconds() / 1000.;
-}
-
-double HighResTimer::getMinutes() const
-{
-  return getSeconds() / 60.;
-}
-
-double HighResTimer::getHours() const
-{
-  return getMinutes() / 60.;
 }
 
 std::string HighResTimer::reportMicroseconds() const
@@ -118,8 +101,28 @@ std::string HighResTimer::report() const
   return reportHours();
 }
 
-ScopedTimer::ScopedTimer(const std::string& description) :
-  hrt_(description)
+std::string HighResTimer::report(TimeUnit::Unit unit) const
+{
+  switch(unit)
+  {
+  case TimeUnit::AUTO: return report();
+  case TimeUnit::US: return reportMicroseconds();
+  case TimeUnit::MS: return reportMilliseconds();
+  case TimeUnit::SEC: return reportSeconds();
+  case TimeUnit::MIN: return reportMinutes();
+  case TimeUnit::HR: return reportHours();
+  }
+  ROS_BREAK();
+  return "";
+}
+
+bool HighResTimer::operator<(const HighResTimer& o) const {
+  return total_us_ < o.total_us_;
+}
+
+ScopedTimer::ScopedTimer(const std::string& description, TimeUnit::Unit unit)
+: hrt_(description)
+, unit_(unit)
 {
   hrt_.start();
 }
@@ -127,7 +130,7 @@ ScopedTimer::ScopedTimer(const std::string& description) :
 ScopedTimer::~ScopedTimer()
 {
   hrt_.stop();
-  std::cout << hrt_.report() << std::endl;
+  std::cout << hrt_.report(unit_) << std::endl;
 }
 
 

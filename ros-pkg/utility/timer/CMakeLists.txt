@@ -1,33 +1,18 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(timer)
+find_package(catkin_simple REQUIRED)
+catkin_simple()
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-set(ROS_BUILD_TYPE RelWithDebInfo)
+cs_add_library(timer src/lib/timer.cpp src/lib/profile.cpp)
+target_link_libraries(timer rt)
 
-rosbuild_init()
+catkin_add_gtest(test_timer src/test/test_timer.cpp)
+target_link_libraries(test_timer timer)
+set_target_properties(test_timer PROPERTIES COMPILE_FLAGS -Wno-unused-but-set-variable)
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+cs_export()
 
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
 
-#common commands for building c++ executables and libraries
-rosbuild_add_library(${PROJECT_NAME}
-  src/lib/timer.cpp
-  )
-target_link_libraries(${PROJECT_NAME} rt)
 
-rosbuild_add_gtest(test_timer src/test/test_timer.cpp)
-rosbuild_add_gtest_build_flags(test_timer)
-target_link_libraries(test_timer ${PROJECT_NAME})
+
 

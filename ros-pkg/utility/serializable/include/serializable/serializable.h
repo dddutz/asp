@@ -3,14 +3,13 @@
 
 #include <iostream>
 #include <fstream>
-#include <assert.h>
 #include <vector>
 #include <queue>
-#include <map>
-#include <yaml-cpp/yaml.h>
-#include <yaml-cpp/node/node.h>
 #include <agent/agent.h>
 
+namespace YAML {
+class Node;
+}
 
 /** \brief @b Serializable is an abstract base class which represents
  * objects that can be serialized and deserialized.
@@ -69,6 +68,16 @@ struct SerializableSaveFunction
   void operator()(const Serializable& obj, const std::string& path) { obj.save(path); }
 };
 
+//! This could be more generic.  There's no need for it to serialize.
+//! It could instead be ThreadedBuffer which you insert things into
+//! and it calls some operation on the next element at its leisure.
+//! ... though it is nice that it automatically works with Serializables.
+//! Probably there should be a ThreadedBuffer, and ThreadedSerializer
+//! is a typedef using SerializableSaveFunction.  Or something like this.
+//!
+//! Be careful to call stop() before ThreadedSerializer is destructed.
+//! You'll get strange crashes otherwise, often referring to the lock
+//! that no longer exists.
 template<typename T, typename S = SerializableSaveFunction>
 class ThreadedSerializer : public Agent
 {
@@ -85,7 +94,7 @@ public:
 
   void _run()
   {
-    S serialize;
+    S serialize;  // TODO: This should become a member so users can modify parameters.
     while(true) {
       usleep(delay_ * 1e3);
       scopeLockWrite;
@@ -105,5 +114,26 @@ public:
 protected:
   std::queue< std::pair<T, std::string> > queue_;
 };
+
+template<class T>
+void serializeScalar(T val, std::ostream& strm)
+{
+  strm.write((char*)&val, sizeof(T));
+}
+  
+template<class T>
+void deserializeScalar(std::istream& strm, T* val)
+{
+  strm.read((char*)val, sizeof(T));
+}
+
+// These functions include serialization length.  This is
+// for serializing YAML with other data into the same ostream.
+// You definitely do NOT want to be editing the YAML that
+// is produced from this because this will invalidate the
+// serialization length.
+void serializeYAML(const YAML::Node& doc, std::ostream& out);
+void deserializeYAML(std::istream& in, YAML::Node* doc);
+
 
 #endif // SERIALIZABLE_H

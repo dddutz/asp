@@ -7,7 +7,6 @@ using boost::shared_ptr;
 
 int main(int argc, char** argv)
 {
-
   int num_variables = 1e3;
   int num_training_examples = 1e3;
   

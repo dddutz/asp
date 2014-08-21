@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+##cmake_minimum_required(VERSION 2.4.6)
+##include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
@@ -9,12 +9,17 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 #set(ROS_BUILD_TYPE RelWithDebInfo)
 
-rosbuild_init()
+##rosbuild_init()
 
 #set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+##set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+##set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
+cmake_minimum_required(VERSION 2.8.3)
+project(graphcuts)
+find_package(catkin_simple REQUIRED)
+catkin_simple()
 
 #uncomment if you have defined messages
 #rosbuild_genmsg()
@@ -22,19 +27,35 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-rosbuild_add_library(graphcuts
+##rosbuild_add_library(graphcuts
+##  src/lib/model.cpp
+##  src/lib/maxflow_inference.cpp
+##  src/lib/potentials_cache.cpp
+##  src/lib/structural_svm.cpp
+##  )
+
+cs_add_library(graphcuts
   src/lib/model.cpp
   src/lib/maxflow_inference.cpp
   src/lib/potentials_cache.cpp
   src/lib/structural_svm.cpp
   )
+
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-rosbuild_add_gtest(test_graphcuts src/test/test_graphcuts.cpp)
-rosbuild_add_gtest_build_flags(test_graphcuts)
+##rosbuild_add_gtest(test_graphcuts src/test/test_graphcuts.cpp)
+##rosbuild_add_gtest_build_flags(test_graphcuts)
+##target_link_libraries(test_graphcuts graphcuts)
+# don't need to catkinize this line because boost is alredy linked by packages that this depends on
+##rosbuild_link_boost(${PROJECT_NAME} system)
+
+catkin_add_gtest(test_graphcuts src/test/test_graphcuts.cpp)
 target_link_libraries(test_graphcuts graphcuts)
-rosbuild_link_boost(${PROJECT_NAME} system)
+
+
+# don't need arguments because no extra beyond defaults
+cs_export()

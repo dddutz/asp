@@ -30,6 +30,14 @@ double BisectionSolver::solve()
     double grad_max = gradient_->eval(tmp)(0);
     cout << "Right boundary: " << max_ << endl;
     cout << "Gradient at right boundary: " << grad_max << endl;
+
+    // TODO: Automatically determine reasonable bounds.
+    // You can do this by expanding the bounds until the
+    // gradients both point inwards.  You need to worry
+    // about functions that are monotonically increasing
+    // or decreasing, though. This includes functions that are
+    // unbounded below, like f(x) = x, or functions like
+    // exp(x) for which all points have a positive gradient.
     assert(grad_min < 0);
     assert(grad_max > 0);
   }
@@ -285,7 +293,9 @@ VectorXd NewtonSolver::solve(VectorXd x) {
     cout << "Condition number: " << vals.maxCoeff() / vals.minCoeff() << endl;
     direction = hess.ldlt().solve(-grad);
 
+#ifndef NDEBUG
     double obj_prev = obj;
+#endif
     obj = objective_->eval(x);
     lambda2 = grad.dot(-direction);
 
@@ -373,7 +383,9 @@ VectorXd GradientSolver::solve(const VectorXd& init) {
   int num_backtracks = 0;
   double mult = 0.5;
   double objective = FLT_MAX;
+#ifndef NDEBUG
   double prev_objective = FLT_MAX;
+#endif
   
   gradient = gradient_->eval(x);
   if(debug_) {
@@ -382,7 +394,9 @@ VectorXd GradientSolver::solve(const VectorXd& init) {
 
   while(true) { 
     x_prev = x;
+#ifndef NDEBUG
     prev_objective = objective;
+#endif
 
     objective = objective_->eval(x);
     gradient = gradient_->eval(x);

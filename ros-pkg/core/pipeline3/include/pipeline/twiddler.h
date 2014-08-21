@@ -1,6 +1,8 @@
 #ifndef TWIDDLER_H
 #define TWIDDLER_H
 
+//#define BOOST_FILESYSTEM_VERSION 2
+
 #include <signal.h>
 #include <boost/filesystem.hpp>
 #include <boost/function.hpp>
