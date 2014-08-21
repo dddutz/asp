@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pipeline3</name>
+  <version>0.0.0</version>
+  <description>The pipeline3 package</description>
+  <maintainer email="teichman@todo.todo">teichman</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <depend>eigen_extensions</depend>
+  <depend>yaml_cpp</depend>
+
+  <export>
+  </export>
+</package>

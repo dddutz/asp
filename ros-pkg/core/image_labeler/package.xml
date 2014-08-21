@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>image_labeler</name>
+  <version>0.0.0</version>
+  <description>The image_labeler package</description>
+  <maintainer email="teichman@todo.todo">teichman</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <depend>serializable</depend>
+
+  <export>
+  </export>
+</package>

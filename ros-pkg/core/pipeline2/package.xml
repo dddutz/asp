@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pipeline2</name>
+  <version>0.0.0</version>
+  <description>The pipeline2 package</description>
+  <maintainer email="dddutz@cs.stanford.edu">dddutz</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <depend>eigen_flags</depend>
+  <depend>rosconsole</depend>
+  <depend>timer</depend>
+
+  <export>
+  </export>
+</package>

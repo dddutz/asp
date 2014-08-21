@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>graphcuts</name>
+  <version>0.0.0</version>
+  <description>The graphcuts package</description>
+  <maintainer email="dddutz@cs.stanford.edu">dddutz</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <depend>maxflow</depend>
+  <depend>eigen_extensions</depend>
+  <depend>bag_of_tricks</depend>
+  <depend>serializable</depend>
+  <depend>name_mapping</depend>
+  <depend>timer</depend>
+  <depend>optimization</depend>
+  <depend>rosconsole</depend>
+
+  <export>
+  </export>
+</package>

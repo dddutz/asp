@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>maxflow</name>
+  <version>0.0.0</version>
+  <description>The maxflow package</description>
+  <maintainer email="dddutz@cs.stanford.edu">dddutz</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <export>
+  </export>
+</package>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>optimization</name>
+  <version>0.0.0</version>
+  <description>The optimization package</description>
+  <maintainer email="teichman@todo.todo">teichman</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <depend>timer</depend>
+  <depend>eigen_flags</depend>
+  <depend>cmake_modules</depend>
+
+  <export>
+  </export>
+</package>
